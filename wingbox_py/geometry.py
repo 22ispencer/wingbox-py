@@ -17,11 +17,33 @@ class Point:
 
 
 class Geometry(ABC):
+    """
+    Representation of a 2D shape
+
+    Attributes
+    ----------
+    center : Point
+        The coordinate of the shape's reference point.
+    rotation : float
+        The clockwise-measured angle of rotation from the default position in
+        radians.
+
+    Methods
+    -------
+    centroid : Point
+        The centroid of the shape
+    smoa_y() : float
+        The second moment of the area about the yy axis
+    smoa_z() : float
+        The second moment of the area about the zz axis
+    pmoa() : float
+        The product moment of the area relative to the y and z axes
+    """
 
     @abstractmethod
-    def __init__(self, rotation: float, center: Point) -> None:
-        self.rotation = rotation
+    def __init__(self, center: Point, rotation=0.0) -> None:
         self.center = center
+        self.rotation = rotation
 
     @abstractmethod
     def area(self) -> float:
@@ -43,14 +65,14 @@ class Geometry(ABC):
     def _pmoa_yz_rel(self) -> float:
         """Product moment of the area about the centroidal y-axis"""
 
-    def smoa(self, phi: float = 0, dist: float = 0) -> float:
+    def smoa(self, dist: float = 0) -> float:
         """Second moment of the area about any axis on the yz-plane
 
         :param phi: The angle of the axis of interest from the y' axis measured counter-clockwise in radians.
         :param dist: The distance of the offset from the axis of interest.
         """
         area = self.area()
-        theta = self.rotation - phi
+        theta = self.rotation
         i_yy = self._smoa_yy_rel()
         i_zz = self._smoa_zz_rel()
         i_yz = self._pmoa_yz_rel()
@@ -64,7 +86,7 @@ class Geometry(ABC):
 
         return rotated + offset
 
-    def pmoa(self, phi: float = 0, dy: float = 0, dz: float = 0) -> float:
+    def pmoa(self) -> float:
         """Second moment of the area about any axis on the yz-plane
 
         :param phi: The angle of the axis of interest from the y' axis measured counter-clockwise in radians.
@@ -72,7 +94,7 @@ class Geometry(ABC):
         :param dz: The distance of the centroid from the z-axis of interest.
         """
         area = self.area()
-        theta = self.rotation - phi
+        theta = self.rotation
         i_yy = self._smoa_yy_rel()
         i_zz = self._smoa_zz_rel()
         i_yz = self._pmoa_yz_rel()
