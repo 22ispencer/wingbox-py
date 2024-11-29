@@ -1,9 +1,8 @@
 import itertools
-from numba import njit
 import numpy as np
 
-MIN_STRINGER_COUNT = 3
-MAX_STRINGER_COUNT = 10
+MIN_STRINGER_COUNT = 5
+MAX_STRINGER_COUNT = 8
 STRINGER_PLACEMENT_STEP = 1 / 8
 
 

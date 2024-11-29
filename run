@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #SBATCH --job-name wingbox-analysis
-#SBATCH --cpus-per-task 32
-#SBATCH --mem 64
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=256G
 
 source /homes/p292u234/venvs/wingbox/bin/activate
 
