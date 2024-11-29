@@ -4,4 +4,6 @@
 #SBATCH --cpus-per-task 32
 #SBATCH --mem 64
 
+source /homes/p292u234/venvs/wingbox/bin/activate
+
 python entry.py
