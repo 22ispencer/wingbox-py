@@ -9,14 +9,13 @@ STRINGER_PLACEMENT_STEP = 1 / 8
 def cross_sections(min_stringer_count: int, max_stringer_count: int):
     positions = np.arange(0, 8, STRINGER_PLACEMENT_STEP)
 
-    cross_sections = []
-    for stringer_num in range(min_stringer_count, max_stringer_count):
-        combinations = np.array(itertools.combinations(positions, r=stringer_num))
-        print(combinations.size)
-        cross_sections.append(combinations)
-
-    return cross_sections
+    for stringer_num in range(min_stringer_count, max_stringer_count + 1):
+        for c in itertools.combinations(positions, r=stringer_num):
+            yield c
 
 
 if __name__ == "__main__":
-    cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT)
+    count = 0
+    for _ in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
+        count += 1
+    print(count)
