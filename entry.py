@@ -11,11 +11,12 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 
     cross_sections = []
     for stringer_num in range(min_stringer_count, max_stringer_count):
-        combinations = list(itertools.combinations(positions, r=stringer_num))
-        cross_sections.extend(combinations)
+        combinations = np.array(itertools.combinations(positions, r=stringer_num))
+        print(combinations.size)
+        cross_sections.append(combinations)
 
     return cross_sections
 
 
 if __name__ == "__main__":
-    print(len(cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT)))
+    cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT)
