@@ -2,7 +2,7 @@ import itertools
 import numpy as np
 
 MIN_STRINGER_COUNT = 5
-MAX_STRINGER_COUNT = 8
+MAX_STRINGER_COUNT = 10
 STRINGER_PLACEMENT_STEP = 1 / 8
 
 
@@ -16,6 +16,8 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 
 if __name__ == "__main__":
     count = 0
-    for _ in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
-        count += 1
+    for batch in itertools.batched(
+        cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT), n=1024
+    ):
+        count += len(batch)
     print(count)
