@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+#SBATCH --job-name wingbox-analysis
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=64G
+
+source /homes/p292u234/venvs/wingbox/bin/activate
+
+python entry.py
