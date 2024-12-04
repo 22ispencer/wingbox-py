@@ -5,5 +5,6 @@
 #SBATCH --mem=512G
 #SBATCH --mail-user=p292u234@wichita.edu
 #SBATCH --mail-type=ALL
+#SBATCH --time=1:00
 
 julia entry.jl
