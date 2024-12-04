@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #SBATCH --job-name wingbox-analysis
-#SBATCH --cpus-per-task=64
-#SBATCH --mem=256G
+#SBATCH --cpus-per-task=36
+#SBATCH --mem=512G
 #SBATCH --mail-user=p292u234@wichita.edu
 #SBATCH --mail-type=ALL
 
