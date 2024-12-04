@@ -6,13 +6,52 @@ import numpy as np
 @guvectorize("(n)->(n)", nopython=True)
 def section_properties(stringer_locs, res):
     str_count = stringer_locs.shape[0]
-    props = np.zeros((str_count + 1, 6))
-    props[0, 0] = 0.50122000000  # Area
-    props[0, 1] = 1.75840199900  # y
-    props[0, 2] = 0.75575764850  # z
-    props[0, 3] = 0.11119666770  # Iyy
-    props[0, 4] = 1.24456607500  # Izz
-    props[0, 5] = 0.08223699025  # Iyz
+    props = np.array(
+        [
+            [
+                0.0937500000000,  # Area
+                3.9375000000000,  # y
+                0.8750000000000,  # z
+                0.0043945312500,  # Iyy*
+                0.0001220703125,  # Izz*
+                0.0000000000000,  # Iyz*
+                1926.0000000000,  # modulus of elasticity
+            ],
+            [
+                0.12525,
+                2,
+                1.354,
+                0.0007491,
+                0.16706,
+                0,
+                2036,
+            ],
+            [
+                0.15625,
+                0.0625,
+                0.625,
+                0.02034505208,
+                0.0002034505208,
+                0,
+                1926,
+            ],
+            [
+                0.12597,
+                2,
+                0.23438,
+                0.00263426,
+                0.16796,
+                0.0209929,
+                2036,
+            ],
+        ]
+    )
+    props[0, 0] = 0.5012200000  # Area
+    props[0, 1] = 1.7584019990  # y
+    props[0, 2] = 0.7557576485  # z
+    props[0, 3] = 223.2335232  # Iyy*
+    props[0, 4] = 2435.454569  # Izz*
+    props[0, 5] = 160.9366964  # Iyz*
 
     # Stringer properties
     props[1:, 0] = 0.05625
