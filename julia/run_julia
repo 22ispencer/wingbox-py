@@ -3,8 +3,13 @@
 #SBATCH --job-name wingbox-analysis
 #SBATCH --cpus-per-task=36
 #SBATCH --mem=512G
+#SBATCH --time=1:00:00
+
+#SBATCH -o /homes/p292u234/job-reports/%x.%j.out
+
 #SBATCH --mail-user=p292u234@wichita.edu
 #SBATCH --mail-type=ALL
-#SBATCH --time=1:00
+
+module load Julia/1.10.0-linux-x86_64
 
 julia entry.jl
