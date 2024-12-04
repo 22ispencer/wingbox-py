@@ -55,5 +55,3 @@ if __name__ == "__main__":
 
         n_ribs = 15
         n_stringers = cs_array.shape[1]
-
-        def_q = solve.deflection_z(awq)

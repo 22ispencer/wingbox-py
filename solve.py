@@ -6,56 +6,49 @@ import numpy as np
 @guvectorize("(n)->(n)", nopython=True)
 def section_properties(stringer_locs, res):
     str_count = stringer_locs.shape[0]
-    props = np.array(
-        [
-            [
-                0.0937500000000,  # Area
-                3.9375000000000,  # y
-                0.8750000000000,  # z
-                0.0043945312500,  # Iyy*
-                0.0001220703125,  # Izz*
-                0.0000000000000,  # Iyz*
-                1926.0000000000,  # modulus of elasticity
-            ],
-            [
-                0.12525,
-                2,
-                1.354,
-                0.0007491,
-                0.16706,
-                0,
-                2036,
-            ],
-            [
-                0.15625,
-                0.0625,
-                0.625,
-                0.02034505208,
-                0.0002034505208,
-                0,
-                1926,
-            ],
-            [
-                0.12597,
-                2,
-                0.23438,
-                0.00263426,
-                0.16796,
-                0.0209929,
-                2036,
-            ],
-        ]
-    )
-    props[0, 0] = 0.5012200000  # Area
-    props[0, 1] = 1.7584019990  # y
-    props[0, 2] = 0.7557576485  # z
-    props[0, 3] = 223.2335232  # Iyy*
-    props[0, 4] = 2435.454569  # Izz*
-    props[0, 5] = 160.9366964  # Iyz*
+    props = np.zeros((4 + str_count, 7))
+
+    # Seed 4 parts that are always there
+    ## rear spar
+    props[0, 0] = 0.0937500000000  # Area
+    props[0, 1] = 3.9375000000000  # y
+    props[0, 2] = 0.8750000000000  # z
+    props[0, 3] = 0.0043945312500  # Iyy*
+    props[0, 4] = 0.0001220703125  # Izz*
+    props[0, 5] = 0.0000000000000  # Iyz*
+    props[0, 6] = 1926.00000000e3  # modulus of elasticity
+
+    ## top skin
+    props[1, 0] = 0.12525
+    props[1, 1] = 2
+    props[1, 2] = 1.354
+    props[1, 3] = 0.0007491
+    props[1, 4] = 0.16706
+    props[1, 5] = 0
+    props[1, 6] = 2036e3
+
+    ## front spar
+    props[2, 0] = 0.15625
+    props[2, 1] = 0.0625
+    props[2, 2] = 0.625
+    props[2, 3] = 0.02034505208
+    props[2, 4] = 0.0002034505208
+    props[2, 5] = 0
+    props[2, 6] = 1926e3
+
+    ## bottom skin
+    props[3, 0] = 0.12597
+    props[3, 1] = 2
+    props[3, 2] = 0.23438
+    props[3, 3] = 0.00263426
+    props[3, 4] = 0.16796
+    props[3, 5] = 0.0209929
+    props[3, 6] = 2036e3
 
     # Stringer properties
-    props[1:, 0] = 0.05625
-    props[1:, 1:2] = 0.0000203451  # Iyy & Izz are identical Iyz = 0
+    props[4:, 0] = 0.05625
+    props[4:, 1:2] = 0.0000203451  # Iyy & Izz are identical Iyz = 0
+    props[4:, 6] = 2.010e6
 
     for i in range(stringer_locs.shape[0]):
         if stringer_locs[i] < 4:
@@ -70,8 +63,12 @@ def section_properties(stringer_locs, res):
             props[1 + i, 1] = 8 - stringer_locs[i]
             props[1 + i, 2] = props[1 + i, 1] / 8
 
-    y_bar = np.sum(props[:, 0] * props[:, 1]) / np.sum(props[:, 0])
-    z_bar = np.sum(props[:, 0] * props[:, 2]) / np.sum(props[:, 0])
+    y_bar = np.sum(props[:, 6] * props[:, 0] * props[:, 1]) / np.sum(
+        props[:, 6] * props[:, 0]
+    )
+    z_bar = np.sum(props[:, 6] * props[:, 0] * props[:, 2]) / np.sum(
+        props[:, 6] * props[:, 0]
+    )
     # Iyy
     res[0] = np.sum(props[:, 3]) + np.sum(props[:, 0] * (props[:, 2] - z_bar))
     # Izz
