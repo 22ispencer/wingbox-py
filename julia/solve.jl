@@ -1,11 +1,12 @@
 function section_properties(stringer_locs)
-    A = zeros(size(stringer_locs, 1))
-    y = zeros(size(stringer_locs, 1))
-    z = zeros(size(stringer_locs, 1))
-    Iyy = zeros(size(stringer_locs, 1))
-    Izz = zeros(size(stringer_locs, 1))
-    Iyz = zeros(size(stringer_locs, 1))
-    E = zeros(size(stringer_locs, 1))
+    vec_len = size(stringer_locs, 1) + 4
+    A = zeros(vec_len)
+    y = zeros(vec_len)
+    z = zeros(vec_len)
+    Iyy = zeros(vec_len)
+    Izz = zeros(vec_len)
+    Iyz = zeros(vec_len)
+    E = zeros(vec_len)
 
     ## rear spar
     A[1] = 0.09375
@@ -53,6 +54,13 @@ function section_properties(stringer_locs)
         end
     end
 
-    return (y_bar=sum(E * A * y) / sum(E * A),
-        z_bar=sum(E * A * z) / sum(E * A))
+    y_bar = sum(E .* A .* y) / sum(E .* A)
+    z_bar = sum(E .* A .* z) / sum(E .* A)
+    return (
+        y_bar=y_bar,
+        z_bar=z_bar,
+        Iyy=sum(E .* (Iyy .+ A .* (z .- z_bar) .^ 2)),
+        Izz=sum(E .* (Izz .+ A .* (y .- y_bar) .^ 2)),
+        Iyz=sum(E .* (Iyz .+ A .* (y .- y_bar) .* (z .- z_bar))),
+    )
 end
