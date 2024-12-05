@@ -8,6 +8,7 @@ import solve
 MIN_STRINGER_COUNT = int(os.environ.get("MIN_STRINGER_COUNT", 5))
 MAX_STRINGER_COUNT = int(os.environ.get("MAX_STRINGER_COUNT", 5))
 STRINGER_PLACEMENT_STEP = 1 / 8
+OUTPUT_FILE = os.environ.get("OUTPUT_FILE", "out.json")
 
 
 def cross_sections(min_stringer_count: int, max_stringer_count: int):
@@ -24,7 +25,8 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 
 
 if __name__ == "__main__":
-    os.remove("out.json")
+    if os.path.isfile(OUTPUT_FILE):
+        os.remove(OUTPUT_FILE)
     points = np.load("points.npy")  # t, y, z, thick, E
     for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
         cs_array = np.array(list(x_sections))
@@ -103,5 +105,5 @@ if __name__ == "__main__":
             "\n\n"
         )
         print(report)
-        with open("out.json", "a") as f:
+        with open(OUTPUT_FILE, "a") as f:
             f.write(json.dumps(report_data))
