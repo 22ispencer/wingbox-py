@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 import itertools
 import numpy as np
 import os
@@ -12,16 +13,21 @@ STRINGER_PLACEMENT_STEP = 1 / 8
 def cross_sections(min_stringer_count: int, max_stringer_count: int):
     positions = np.arange(0, 8, STRINGER_PLACEMENT_STEP)
 
+    batches = []
     for stringer_num in range(min_stringer_count, max_stringer_count + 1):
-        yield itertools.batched(
-            itertools.combinations(positions, r=stringer_num), n=1_000_000_000
+        batches.append(
+            itertools.batched(
+                itertools.combinations(positions, r=stringer_num), n=10_000_000
+            )
         )
+    return itertools.chain(*batches)
 
 
 if __name__ == "__main__":
+    os.remove("out.json")
     points = np.load("points.npy")  # t, y, z, thick, E
     for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
-        cs_array = np.array(list(x_sections))[0]
+        cs_array = np.array(list(x_sections))
         print(cs_array)
         print(cs_array.shape[0])
         props = np.zeros((cs_array.shape[0], cs_array.shape[1]))
@@ -72,6 +78,16 @@ if __name__ == "__main__":
             n_stringers, n_ribs, stacked, adjacent, loads, def_q, def_max, twist
         )
         max_ind = np.argmax(scores)
+        report_data = {
+            "score": float(scores[max_ind]),
+            "twist": float(twist[max_ind]),
+            "q_def": float(def_q[max_ind]),
+            "max_def": float(def_max[max_ind]),
+            "load": float(loads[max_ind]),
+            "cross_section_locs": cs_array[max_ind].tolist(),
+            "section_props": props[max_ind, :5].tolist(),
+            "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"),
+        }
         report = (
             f"{n_stringers} Stringers\n"
             "-----------------------\n"
@@ -84,8 +100,8 @@ if __name__ == "__main__":
             f"Section properties (Iyy, Izz, Iyz, y_bar, z_bar):\n"
             f"{props[max_ind,:5]}\n"
             f"{datetime.now()}"
-            "\n"
+            "\n\n"
         )
         print(report)
-        with open("out.txt", "a") as f:
-            f.write(report)
+        with open("out.json", "a") as f:
+            f.write(json.dumps(report_data))
