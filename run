@@ -13,3 +13,5 @@
 source /homes/p292u234/venvs/wingbox/bin/activate
 
 python entry.py
+
+cp out.txt /homes/p292u234
