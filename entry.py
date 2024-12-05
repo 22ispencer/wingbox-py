@@ -1,10 +1,11 @@
+from datetime import datetime
 import itertools
 import numpy as np
 
 import solve
 
 MIN_STRINGER_COUNT = 5
-MAX_STRINGER_COUNT = 10
+MAX_STRINGER_COUNT = 8
 STRINGER_PLACEMENT_STEP = 1 / 8
 
 
@@ -16,9 +17,8 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 
 
 if __name__ == "__main__":
-    num = 5
     points = np.load("points.npy")  # t, y, z, thick, E
-    for x_sections in cross_sections(num, num):
+    for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
         cs_array = np.array(list(x_sections))
         props = np.zeros((cs_array.shape[0], cs_array.shape[1]))
         solve.section_properties(cs_array, props)
@@ -73,3 +73,5 @@ if __name__ == "__main__":
             f"Q deflection: {def_q[max_ind]}, max deflection: {def_max[max_ind]}, twist: {twist[max_ind]}"
         )
         print(props[max_ind])
+
+        print(datetime.now())
