@@ -13,14 +13,17 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
     positions = np.arange(0, 8, STRINGER_PLACEMENT_STEP)
 
     for stringer_num in range(min_stringer_count, max_stringer_count + 1):
-        yield itertools.combinations(positions, r=stringer_num)
+        yield itertools.batched(
+            itertools.combinations(positions, r=stringer_num), n=1_000_000_000
+        )
 
 
 if __name__ == "__main__":
     points = np.load("points.npy")  # t, y, z, thick, E
-    f = open("out.txt", "w+")
     for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
-        cs_array = np.array(list(x_sections))
+        cs_array = np.array(list(x_sections))[0]
+        print(cs_array)
+        print(cs_array.shape[0])
         props = np.zeros((cs_array.shape[0], cs_array.shape[1]))
         solve.section_properties(cs_array, props)
 
@@ -84,5 +87,5 @@ if __name__ == "__main__":
             "\n"
         )
         print(report)
-        f.write(report)
-    f.close()
+        with open("out.txt", "a") as f:
+            f.write(report)
