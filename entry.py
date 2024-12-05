@@ -4,8 +4,8 @@ import numpy as np
 import os
 import solve
 
-MIN_STRINGER_COUNT = os.environ.get("MIN_STRINGER_COUNT", 5)
-MAX_STRINGER_COUNT = os.environ.get("MAX_STRINGER_COUNT", 5)
+MIN_STRINGER_COUNT = int(os.environ.get("MIN_STRINGER_COUNT", 5))
+MAX_STRINGER_COUNT = int(os.environ.get("MAX_STRINGER_COUNT", 5))
 STRINGER_PLACEMENT_STEP = 1 / 8
 
 
