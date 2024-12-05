@@ -5,7 +5,7 @@ import numpy as np
 import solve
 
 MIN_STRINGER_COUNT = 5
-MAX_STRINGER_COUNT = 8
+MAX_STRINGER_COUNT = 5
 STRINGER_PLACEMENT_STEP = 1 / 8
 
 
@@ -18,6 +18,7 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 
 if __name__ == "__main__":
     points = np.load("points.npy")  # t, y, z, thick, E
+    f = open("out.txt", "w+")
     for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
         cs_array = np.array(list(x_sections))
         props = np.zeros((cs_array.shape[0], cs_array.shape[1]))
@@ -68,10 +69,20 @@ if __name__ == "__main__":
             n_stringers, n_ribs, stacked, adjacent, loads, def_q, def_max, twist
         )
         max_ind = np.argmax(scores)
-        print(
-            f"score: {scores[max_ind]}, cross-section: {cs_array[max_ind]}, load: {loads[max_ind]}\n"
-            f"Q deflection: {def_q[max_ind]}, max deflection: {def_max[max_ind]}, twist: {twist[max_ind]}"
+        report = (
+            f"{n_stringers} Stringers\n"
+            "-----------------------\n"
+            f"Score: {scores[max_ind]}\n"
+            f"Shear deflection (twist): {twist[max_ind]}\n"
+            f"Q deflection: {def_q[max_ind]}\n"
+            f"Max deflection: {def_max[max_ind]}\n"
+            f"Max Load: {loads[max_ind]}\n"
+            f"Cross-section components: {cs_array[max_ind]}\n"
+            f"Section properties (Iyy, Izz, Iyz, y_bar, z_bar):\n"
+            f"{props[max_ind,:5]}\n"
+            f"{datetime.now()}"
+            "\n"
         )
-        print(props[max_ind])
-
-        print(datetime.now())
+        print(report)
+        f.write(report)
+    f.close()

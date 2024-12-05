@@ -184,10 +184,6 @@ def final_score(n_stringer, n_ribs, n_stacked, n_adj, load, def_q, def_max, twis
         + 0.3 * 15 / (n_ribs + 1)
         - (n_stacked / 8 + n_adj / 8)
     )
-    perf = (
-        0.5 * load / weight
-        + 0.5 / def_q
-        + 0.05 * (load / def_max + load / twist)
-        - 10 * weight
-    )
+    # removed twist becaues it was causing more issues than it was worth to keep in
+    perf = 0.5 * load / weight + 0.5 / def_q + 0.05 * (load / def_max) - 10 * weight
     return design + perf

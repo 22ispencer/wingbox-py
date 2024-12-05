@@ -1,0 +1,12 @@
+5 Stringers
+-----------------------
+Score: 204.4404135853251
+Shear deflection (twist): 0.002325688539115954
+Q deflection: -0.37495103041852734
+Max deflection: 7.9442749569925475
+Max Load: 110.9375
+Cross-section components: [6.625 7.    7.125 7.75  7.875]
+Section properties (Iyy, Izz, Iyz, y_bar, z_bar):
+[5.45369585e+04 6.82727673e+05 5.03137262e+05 1.04560377e+00
+ 1.75057064e-01]
+2024-12-05 01:47:13.817494
