@@ -31,8 +31,9 @@ if __name__ == "__main__":
         for i in range(6):
             failed = solve.failed(
                 0,
-                1.97994026764,
-                1.3839178396,
+                0,
+                0,
+                2000e3,
                 loads,
                 props[:, 0],
                 props[:, 1],
@@ -50,7 +51,6 @@ if __name__ == "__main__":
         solve.count_adjacent(cs_array, adj)
 
         stacked = np.zeros(cs_array.shape[0])
-        # solve.count_stacked(cs_array, stacked)
 
         n_ribs = 15
         n_stringers = cs_array.shape[1]
@@ -64,4 +64,8 @@ if __name__ == "__main__":
             n_stringers, n_ribs, stacked, adjacent, loads, def_q, def_max, twist
         )
         max_ind = np.argmax(scores)
-        print(max_ind, scores[max_ind], cs_array[max_ind])
+        print(
+            f"score: {scores[max_ind]}, cross-section: {cs_array[max_ind]}, load: {loads[max_ind]}\n"
+            f"Q deflection: {def_q[max_ind]}, max deflection: {def_max[max_ind]}, twist: {twist[max_ind]}"
+        )
+        print(props[max_ind])

@@ -70,14 +70,16 @@ def section_properties(stringer_locs, res):
         props[:, 6] * props[:, 0]
     )
     # Iyy
-    res[0] = np.sum(props[:, 3]) + np.sum(props[:, 0] * (props[:, 2] - z_bar))
+    res[0] = np.sum(props[:, 6] * (props[:, 3] + props[:, 0] * (props[:, 2] - z_bar)))
     # Izz
-    res[1] = np.sum(props[:, 4]) + np.sum(props[:, 0] * (props[:, 1] - y_bar))
+    res[1] = np.sum(props[:, 6] * (props[:, 4] + props[:, 0] * (props[:, 1] - y_bar)))
     # Iyz
-    res[2] = np.sum(props[:, 5]) + np.sum(
-        props[:, 0] * (props[:, 1] - y_bar) * (props[:, 2] - z_bar)
+    res[2] = np.sum(
+        props[:, 6]
+        * (props[:, 5] + props[:, 0] * (props[:, 1] - y_bar) * (props[:, 2] - z_bar))
     )
     res[3] = y_bar
+    res[4] = z_bar
 
 
 @vectorize([float64(float64, float64, float64, float64)], nopython=True)
@@ -87,7 +89,7 @@ def deflection_y(i_yy, i_zz, i_yz, load):
 
 @vectorize([float64(float64, float64, float64, float64)], nopython=True)
 def deflection_z(i_yy, i_zz, i_yz, load):
-    return (i_zz / (i_yy * i_zz - i_yz**2)) * (load - 5) * -32180.83333
+    return -(i_zz / (i_yy * i_zz - i_yz**2)) * (load - 5) * -32180.83333
 
 
 @vectorize(nopython=True)
@@ -106,10 +108,10 @@ def stress_shear(load, y_bar, thickness):
 
 
 @vectorize(
-    [float64(float64, float64, float64, float64, float64, float64, float64)],
     nopython=True,
 )
 def stress_normal(
+    mod_elastic,
     x,
     y,
     z,
@@ -118,7 +120,7 @@ def stress_normal(
     i_zz,
     i_yz,
 ):
-    return -y * ((load - 5) * (x - 45.75) * i_yy / (i_yy * i_zz - i_yz**2)) + z * (
+    return -y * ((load - 5) * (x - 45.75) * i_yz / (i_yy * i_zz - i_yz**2)) + z * (
         (load - 5) * (x - 45.75) * i_zz / (i_yy * i_zz - i_yz**2)
     )
 
@@ -135,13 +137,14 @@ def stress_normal(
             float64,
             float64,
             float64,
+            float64,
         )
     ],
     nopython=True,
 )
-def failed(x, y, z, load, i_yy, i_zz, i_yz, y_bar, thickness):
+def failed(x, y, z, mod_elastic, load, i_yy, i_zz, i_yz, y_bar, thickness):
     shear = stress_shear(load, y_bar, thickness)
-    normal = stress_normal(x, y, z, load, i_yy, i_zz, i_yz)
+    normal = stress_normal(mod_elastic, x, y, z, load, i_yy, i_zz, i_yz)
 
     f_1 = -0.038
     f_11 = 0.0096
