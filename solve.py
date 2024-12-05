@@ -1,5 +1,5 @@
 import math
-from numba import guvectorize, vectorize, float64
+from numba import guvectorize, vectorize, boolean, float64
 import numpy as np
 
 
@@ -128,7 +128,7 @@ def stress_normal(
 
 @vectorize(
     [
-        float64(
+        boolean(
             float64,
             float64,
             float64,

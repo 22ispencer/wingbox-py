@@ -17,6 +17,7 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 
 if __name__ == "__main__":
     num = 5
+    points = np.load("points.npy")  # t, y, z, thick, E
     for x_sections in cross_sections(num, num):
         cs_array = np.array(list(x_sections))
         props = np.zeros((cs_array.shape[0], cs_array.shape[1]))
@@ -29,18 +30,21 @@ if __name__ == "__main__":
         failed = []
 
         for i in range(6):
-            failed = solve.failed(
-                0,
-                0,
-                0,
-                2000e3,
-                loads,
-                props[:, 0],
-                props[:, 1],
-                props[:, 2],
-                props[:, 3],
-                1 / 32,
-            )
+            failed = np.full(loads.shape, False)
+            for point in points:
+                did_it_fail = solve.failed(
+                    0,
+                    point[1] - props[:, 3],
+                    point[2] - props[:, 4],
+                    point[4],
+                    loads,
+                    props[:, 0],
+                    props[:, 1],
+                    props[:, 2],
+                    props[:, 3],
+                    point[3],
+                )
+                failed = failed | did_it_fail
 
             loads = np.where(failed, loads - step, loads + step)
             step /= 2
