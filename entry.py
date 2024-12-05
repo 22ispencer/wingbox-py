@@ -58,7 +58,7 @@ if __name__ == "__main__":
         adjacent = 0
         def_q = solve.deflection_y(props[:, 0], props[:, 1], props[:, 2], 0)
         def_max = solve.deflection_y(props[:, 0], props[:, 1], props[:, 2], loads)
-        twist = solve.torsion(46, loads, props[:, 3])
+        twist = solve.twist(loads, props[:, 3])
 
         scores = solve.final_score(
             n_stringers, n_ribs, stacked, adjacent, loads, def_q, def_max, twist

@@ -92,14 +92,15 @@ def deflection_z(i_yy, i_zz, i_yz, load):
     return -(i_zz / (i_yy * i_zz - i_yz**2)) * (load - 5) * -32180.83333
 
 
-@vectorize(nopython=True)
-def torsion(x, load, y_bar):
-    return 0.00018401233 * x * shear_flow(load, y_bar)
-
-
 @vectorize([float64(float64, float64)], nopython=True)
 def shear_flow(load, y_bar):
     return (load * (y_bar - 1) + 5 * y_bar - 10) / 4.136
+
+
+@vectorize(nopython=True)
+def twist(load, y_bar):
+    q = shear_flow(load, y_bar)
+    return 4.43525e-6 * q**2 + 0.0334937 * q
 
 
 @vectorize([float64(float64, float64, float64)], nopython=True)
