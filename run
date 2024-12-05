@@ -10,6 +10,11 @@
 #SBATCH --mail-user=p292u234@wichita.edu
 #SBATCH --mail-type=ALL
 
+export MIN_STRINGER_COUNT=8
+export MAX_STRINGER_COUNT=8
+
+module load "Python/3.12.3-GCCcore-13.3.0"
+
 source /homes/p292u234/venvs/wingbox/bin/activate
 
 python entry.py
