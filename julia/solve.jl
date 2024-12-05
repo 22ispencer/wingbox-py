@@ -1,5 +1,6 @@
 function section_properties(stringer_locs)
     vec_len = size(stringer_locs, 1) + 4
+    store = zeros(vec_len, 7)
     A = zeros(vec_len)
     y = zeros(vec_len)
     z = zeros(vec_len)
@@ -54,7 +55,7 @@ function section_properties(stringer_locs)
         end
     end
 
-    y_bar = esum(E .* A .* y) / sum(E .* A)
+    y_bar = sum(E .* A .* y) / sum(E .* A)
     z_bar = sum(E .* A .* z) / sum(E .* A)
     return (
         y_bar=y_bar,
@@ -92,7 +93,7 @@ function stress_normal(x, y, z, load, i_yy, i_zz, i_yz)
     )
 end
 
-function failed()
+function failed(load, y_bar, thickness, x, y, z, i_yy, i_zz, i_yz)
     shear = stress_shear(load, y_bar, thickness)
     normal = stress_normal(x, y, z, load, i_yy, i_zz, i_yz)
 

@@ -25,7 +25,12 @@ end
 const stringer_positions = collect(range(0.0, 8.0, step=(1 / 8)))[1:end-1]
 
 function position_combos()
-    collect(Combinations(stringer_positions, 5))
+    return collect(Combinations(stringer_positions, 2))
 end
 
-@time position_combos()
+function main()
+    @time combos = position_combos()
+    @time props = section_properties.(stringer_positions)
+    print(props)
+end
+main()

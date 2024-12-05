@@ -80,14 +80,14 @@ def section_properties(stringer_locs, res):
     res[3] = y_bar
 
 
-@vectorize([float64(float64, float64, float64, float64, float64)], nopython=True)
-def deflection_y(mod_elastic, i_yy, i_zz, i_yz, load):
-    return (i_yz / (mod_elastic * (i_yy * i_zz - i_yz**2))) * (load - 5) * -32180.83333
+@vectorize([float64(float64, float64, float64, float64)], nopython=True)
+def deflection_y(i_yy, i_zz, i_yz, load):
+    return (i_yz / (i_yy * i_zz - i_yz**2)) * (load - 5) * -32180.83333
 
 
-@vectorize([float64(float64, float64, float64, float64, float64)], nopython=True)
-def deflection_z(mod_elastic, i_yy, i_zz, i_yz, load):
-    return (i_zz / (mod_elastic * (i_yy * i_zz - i_yz**2))) * (load - 5) * -32180.83333
+@vectorize([float64(float64, float64, float64, float64)], nopython=True)
+def deflection_z(i_yy, i_zz, i_yz, load):
+    return (i_zz / (i_yy * i_zz - i_yz**2)) * (load - 5) * -32180.83333
 
 
 @vectorize(nopython=True)
@@ -159,17 +159,17 @@ def failed(x, y, z, load, i_yy, i_zz, i_yz, y_bar, thickness):
     return f_1 * normal + f_11 * normal**2 + f_66 * shear**2 >= 1
 
 
-@guvectorize([float64[:], float64], "(n)->()")
+@guvectorize("(n)->()")
 def count_stacked(places, out):
     _, counts = np.unique(places, return_counts=True)
-    out = np.sum(counts) - places.shape[0]
+    out[0] = np.sum(counts) - places.shape[0]
 
 
-@guvectorize([float64[:], float64], "(n)->()")
+@guvectorize("(n)->()")
 def count_adjacent(places, out):
     unique = np.unique(places)
     dup = np.roll(unique, 1)
-    out = np.count_nonzero(unique - dup <= 1 / 8)
+    out[0] = np.count_nonzero(unique - dup <= 1 / 8)
 
 
 @vectorize
