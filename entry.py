@@ -27,7 +27,9 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
 if __name__ == "__main__":
     if os.path.isfile(OUTPUT_FILE):
         os.remove(OUTPUT_FILE)
-    points = np.load("points.npy")  # t, y, z, thick, E
+    with open(OUTPUT_FILE, "a") as f:
+        f.write("[\n")
+    points = np.load("points.npy")  # t, o, z, thick, E
     for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
         cs_array = np.array(list(x_sections))
         print(cs_array.shape[0])
@@ -79,7 +81,9 @@ if __name__ == "__main__":
             n_stringers, n_ribs, stacked, adjacent, loads, def_q, def_max, twist
         )
 
-        valid_scores = scores[loads > 15.0]
+        valid_scores = scores[loads >= 15.0]
+        if valid_scores.shape[0] < 1:
+            continue
         vmax = np.max(valid_scores)
         max_ind = np.where(scores == vmax)[0][0]
         print(max_ind)
@@ -109,4 +113,6 @@ if __name__ == "__main__":
         )
         print(report)
         with open(OUTPUT_FILE, "a") as f:
-            f.write(json.dumps(report_data))
+            f.write(json.dumps(report_data) + ",\n")
+    with open(OUTPUT_FILE, "a") as f:
+        f.write("]\n")
