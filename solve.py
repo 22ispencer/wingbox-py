@@ -46,7 +46,7 @@ def section_properties(stringer_locs, res):
     props[3, 6] = 2036e3
 
     # Stringer properties
-    props[4:, 0] = 0.05625
+    props[4:, 0] = 0.015625
     props[4:, 1:2] = 0.0000203451  # Iyy & Izz are identical Iyz = 0
     props[4:, 6] = 2.010e6
 
@@ -70,9 +70,13 @@ def section_properties(stringer_locs, res):
         props[:, 6] * props[:, 0]
     )
     # Iyy
-    res[0] = np.sum(props[:, 6] * (props[:, 3] + props[:, 0] * (props[:, 2] - z_bar)))
+    res[0] = np.sum(
+        props[:, 6] * (props[:, 3] + props[:, 0] * (props[:, 2] - z_bar) ** 2)
+    )
     # Izz
-    res[1] = np.sum(props[:, 6] * (props[:, 4] + props[:, 0] * (props[:, 1] - y_bar)))
+    res[1] = np.sum(
+        props[:, 6] * (props[:, 4] + props[:, 0] * (props[:, 1] - y_bar) ** 2)
+    )
     # Iyz
     res[2] = np.sum(
         props[:, 6]
