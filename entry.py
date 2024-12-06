@@ -30,7 +30,6 @@ if __name__ == "__main__":
     points = np.load("points.npy")  # t, y, z, thick, E
     for x_sections in cross_sections(MIN_STRINGER_COUNT, MAX_STRINGER_COUNT):
         cs_array = np.array(list(x_sections))
-        print(cs_array)
         print(cs_array.shape[0])
         props = np.zeros((cs_array.shape[0], cs_array.shape[1]))
         solve.section_properties(cs_array, props)
@@ -79,7 +78,11 @@ if __name__ == "__main__":
         scores = solve.final_score(
             n_stringers, n_ribs, stacked, adjacent, loads, def_q, def_max, twist
         )
-        max_ind = np.argmax(scores)
+
+        valid_scores = scores[loads > 15.0]
+        vmax = np.max(valid_scores)
+        max_ind = np.where(scores == vmax)[0][0]
+        print(max_ind)
         report_data = {
             "score": float(scores[max_ind]),
             "twist": float(twist[max_ind]),
