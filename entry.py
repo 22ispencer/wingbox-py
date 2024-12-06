@@ -7,6 +7,7 @@ import solve
 
 MIN_STRINGER_COUNT = int(os.environ.get("MIN_STRINGER_COUNT", 5))
 MAX_STRINGER_COUNT = int(os.environ.get("MAX_STRINGER_COUNT", 5))
+BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 10_000_000))
 STRINGER_PLACEMENT_STEP = 1 / 8
 OUTPUT_FILE = os.environ.get("OUTPUT_FILE", "out.json")
 
@@ -18,7 +19,7 @@ def cross_sections(min_stringer_count: int, max_stringer_count: int):
     for stringer_num in range(min_stringer_count, max_stringer_count + 1):
         batches.append(
             itertools.batched(
-                itertools.combinations(positions, r=stringer_num), n=10_000_000
+                itertools.combinations(positions, r=stringer_num), n=BATCH_SIZE
             )
         )
     return itertools.chain(*batches)

@@ -180,7 +180,7 @@ def count_adjacent(places, out):
     out[0] = np.count_nonzero(unique - dup <= 1 / 8)
 
 
-@vectorize
+@vectorize(nopython=True)
 def final_score(n_stringer, n_ribs, n_stacked, n_adj, load, def_q, def_max, twist):
     weight = 0.4369 + n_ribs * 0.00213 + n_stringer * 0.0146
     design = 100 * (
