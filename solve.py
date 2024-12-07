@@ -52,16 +52,16 @@ def section_properties(stringer_locs, res):
 
     for i in range(stringer_locs.shape[0]):
         if stringer_locs[i] < 4:
-            props[1 + i, 1] = (
+            props[4 + i, 1] = (
                 15 * math.cos(0.066865794705 * stringer_locs[i] + 1.43706473738) + 2
             )
-            props[1 + i, 1] = (
+            props[4 + i, 1] = (
                 15 * math.sin(0.066865794705 * stringer_locs[i] + 1.43706473738)
                 - 13.6160687473
             )
         else:
-            props[1 + i, 1] = 8 - stringer_locs[i]
-            props[1 + i, 2] = props[1 + i, 1] / 8
+            props[4 + i, 1] = 8 - stringer_locs[i]
+            props[4 + i, 2] = props[4 + i, 1] / 8
 
     y_bar = np.sum(props[:, 6] * props[:, 0] * props[:, 1]) / np.sum(
         props[:, 6] * props[:, 0]

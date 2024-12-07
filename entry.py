@@ -48,8 +48,8 @@ if __name__ == "__main__":
             for point in points:
                 did_it_fail = solve.failed(
                     0,
-                    point[1] - props[:, 3],
-                    point[2] - props[:, 4],
+                    point[1],
+                    point[2],
                     point[4],
                     loads,
                     props[:, 0],
@@ -64,6 +64,7 @@ if __name__ == "__main__":
             step /= 2
 
         loads = np.where(failed, loads - step, loads)
+        print(loads)
 
         adj = np.zeros(cs_array.shape[0])
         solve.count_adjacent(cs_array, adj)
@@ -85,6 +86,7 @@ if __name__ == "__main__":
         valid_scores = scores[loads >= 15.0]
         if valid_scores.shape[0] < 1:
             continue
+        print(f"there are {valid_scores.shape[0]} valid scores")
         vmax = np.max(valid_scores)
         max_ind = np.where(scores == vmax)[0][0]
         print(max_ind)
